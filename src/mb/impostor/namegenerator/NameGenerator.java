@@ -19,16 +19,72 @@ import org.jsoup.select.Elements;
  * @author mb
  */
 public class NameGenerator {
-    public static void main(String[] args) throws IOException {
+    /**public static void main(String[] args) throws IOException {
         NameGenerator name = new NameGenerator();
-        System.out.println(name.randomNameGenerator());
+        System.out.println(name.randomMaleNameGen());
+    }
+    **/
+    
+    /**
+     * Generates a random name of either gender
+     * @return name
+     * @throws IOException 
+     */
+    public String randomNameGen() throws IOException {
+
+        //Validate.isTrue(args.length == 1, "usage: supply url to fetch");
+        //String url = args[0];
+        String returnName = null;
+        String url = "http://www.behindthename.com/random/random.php?number=2&gender=both&surname=&all=yes";
+        print("Fetching %s...", url);
+        Document doc = Jsoup.connect(url).get();
+        Elements links = doc.select("a[href]");
+        print("\nLinks: (%d)", links.size());
+        for (Element link : links) {
+            if (link.attr("abs:href").equalsIgnoreCase("http://www.behindthename.com/name/" + trim(link.text(), 35))) {
+                print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
+                if (returnName == null) {
+                    returnName = trim(link.text(), 35);
+                } else {
+                    returnName = returnName + " " + trim(link.text(), 35);
+                }
+            }
+        }
+        return returnName;
     }
     /**
-     * Generates a random name of either gender 
+     * Generates a random female name
+     * @return female name
+     * @throws IOException 
+     */
+    public String randomFemaleNameGen() throws IOException {
+
+        //Validate.isTrue(args.length == 1, "usage: supply url to fetch");
+        //String url = args[0];
+        String returnName = null;
+        String url = "http://www.behindthename.com/random/random.php?number=2&gender=f&surname=&all=yes";
+        print("Fetching %s...", url);
+        Document doc = Jsoup.connect(url).get();
+        Elements links = doc.select("a[href]");
+        print("\nLinks: (%d)", links.size());
+        for (Element link : links) {
+            if (link.attr("abs:href").equalsIgnoreCase("http://www.behindthename.com/name/" + trim(link.text(), 35))) {
+                print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
+                if (returnName == null) {
+                    returnName = trim(link.text(), 35);
+                } else {
+                    returnName = returnName + " " + trim(link.text(), 35);
+                }
+            }
+        }
+        return returnName;
+    }
+    /**
+     * Generates a random masculine name
      * @return random name
      * @throws IOException 
      */
-    public String randomNameGenerator() throws IOException {
+    public String randomMaleNameGen() throws IOException {
 
         //Validate.isTrue(args.length == 1, "usage: supply url to fetch");
         //String url = args[0];
@@ -36,25 +92,7 @@ public class NameGenerator {
         String url = "http://www.behindthename.com/random/random.php?number=2&gender=m&surname=&all=yes";
         print("Fetching %s...", url);
         Document doc = Jsoup.connect(url).get();
-        Elements links = doc.select("a[href]");
-        Elements media = doc.select("[src]");
-        Elements imports = doc.select("link[href]");
-
-        print("\nMedia: (%d)", media.size());
-        for (Element src : media) {
-            if (src.tagName().equals("img")) {
-                print(" * %s: <%s> %sx%s (%s)",
-                        src.tagName(), src.attr("abs:src"), src.attr("width"), src.attr("height"),
-                        trim(src.attr("alt"), 20));
-            } else {
-                print(" * %s: <%s>", src.tagName(), src.attr("abs:src"));
-            }
-        }
-
-        print("\nImports: (%d)", imports.size());
-        for (Element link : imports) {
-            print(" * %s <%s> (%s)", link.tagName(), link.attr("abs:href"), link.attr("rel"));
-        }
+        Elements links = doc.select("a[href]");     
 
         print("\nLinks: (%d)", links.size());
         for (Element link : links) {
